@@ -21,7 +21,7 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -132,3 +132,8 @@ const renderApp = () => {
 };
 
 goToPage(POSTS_PAGE);
+// goToPage(ADD_POSTS_PAGE);
+
+function  onAddPostClick({ description, imageUrl }) {
+  
+}
