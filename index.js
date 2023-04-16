@@ -20,6 +20,7 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+export let selectedUserId = "";
 
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
@@ -53,6 +54,7 @@ export const goToPage = (newPage, data) => {
 
     if (newPage === POSTS_PAGE) {
       page = LOADING_PAGE;
+      selectedUserId = "";
       renderApp();
 
       return getPosts({ token: getToken() })
@@ -70,9 +72,20 @@ export const goToPage = (newPage, data) => {
     if (newPage === USER_POSTS_PAGE) {
       // TODO: реализовать получение постов юзера из API
       console.log("Открываю страницу пользователя: ", data.userId);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+      
+      page = LOADING_PAGE;
+      renderApp();
+
+      return getPosts({ token: getToken(),id: data.userId })
+        .then((newPosts) => {
+          page = USER_POSTS_PAGE;
+          posts = newPosts;
+          renderApp();
+        })
+        .catch((error) => {
+          console.error(error);
+          goToPage(POSTS_PAGE);
+        });
     }
 
     page = newPage;
@@ -126,14 +139,15 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    return renderPostsPageComponent({
+      appEl,
+    });
   }
 };
 
 goToPage(POSTS_PAGE);
 // goToPage(ADD_POSTS_PAGE);
 
-function  onAddPostClick({ description, imageUrl }) {
+// function  onAddPostClick({ description, imageUrl }) {
   
-}
+// }

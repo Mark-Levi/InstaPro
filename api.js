@@ -1,18 +1,39 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 
-const personalKey = "olya-jacobs";
+// const personalKey = "olya-jacobs";
+const personalKey = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
-const a = "https://webdev-hw-api.vercel.app/api/v1/olya-jacobs/instapro";
+const a = "https://webdev-hw-api.vercel.app/api/v1/prod/instapro";
 const b = "https://webdev-hw-api.vercel.app/api/user/login";
+const c = "https://webdev-hw-api.vercel.app/api/v1/prod/instapro/user-posts/643b981799ab77ea2d75bb29";
 
+export function changeLike({ token, id = "",isLike }) {
+  //Ставим/снимаем лайк
+  
+  return fetch(postsHost + id+ isLike? "/dislike" : "/like", {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}
 
 export function uploadPost({ token, description, imageUrl }) {
   // Запись нового поста
   return fetch(postsHost, {
     method: "POST",
-    // mode: "no-cors",
     headers: {
       Authorization: token,
     },
@@ -26,7 +47,6 @@ export function uploadPost({ token, description, imageUrl }) {
     } else if (response.status === 401) {
       console.log("Ошибка авторизации");
       throw new Error("Нет авторизации");
-      
     } else {
       console.log("Прочие ошибки");
       throw new Error("Прочие ошибки записи поста");
@@ -34,9 +54,10 @@ export function uploadPost({ token, description, imageUrl }) {
   });
 }
 
-export function getPosts({ token }) {
+export function getPosts({ token, id = "" }) {
   //Загрузка постов
-  return fetch(postsHost, {
+  const a = postsHost + "/user-posts/" + id;
+  return fetch(id ? (postsHost + "/user-posts/" + id) : postsHost, {
     method: "GET",
     headers: {
       Authorization: token,
