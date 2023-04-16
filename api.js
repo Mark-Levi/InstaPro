@@ -12,20 +12,23 @@ export function uploadPost({ token, description, imageUrl }) {
   // Запись нового поста
   return fetch(postsHost, {
     method: "POST",
-    mode: "no-cors",
+    // mode: "no-cors",
     headers: {
       Authorization: token,
     },
-    posts: JSON.stringify({
+    body: JSON.stringify({
       description,
       imageUrl
     }),
   }).then((response) => {
-    if (response.status === 200) {
+    if (response.status === 201) {
       return response.json();
     } else if (response.status === 401) {
+      console.log("Ошибка авторизации");
       throw new Error("Нет авторизации");
+      
     } else {
+      console.log("Прочие ошибки");
       throw new Error("Прочие ошибки записи поста");
     }
   });
