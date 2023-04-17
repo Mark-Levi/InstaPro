@@ -14,7 +14,10 @@ export function renderHeaderComponent({ element }) {
       </button>
       ${
         user
-          ? `<button title="${user.name}" class="header-button logout-button">Выйти</button>`
+          ? `<div class="post-header" id= "logoutButton" title= "Выйти">
+              <img src=${user.imageUrl} class="post-header__user-image">
+             <p class="post-header__user-name">${user.name}</p>
+            </div>`
           : ""
       }  
       </button>
@@ -35,8 +38,8 @@ export function renderHeaderComponent({ element }) {
   element.querySelector(".logo").addEventListener("click", () => {
     goToPage(POSTS_PAGE);
   });
-
-  element.querySelector(".logout-button")?.addEventListener("click", logout);
+ 
+  document.getElementById("logoutButton")?.addEventListener("click", logout);
 
   return element;
 }

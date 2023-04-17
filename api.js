@@ -10,7 +10,7 @@ const b = "https://webdev-hw-api.vercel.app/api/user/login";
 const c = "https://webdev-hw-api.vercel.app/api/v1/prod/instapro/user-posts/643b981799ab77ea2d75bb29";
 
 export function changeLike({ token, id = "",isLike }) {
-  //Ставим/снимаем лайк
+  //Ставим-снимаем лайк
   const a=postsHost + "/" +id+ (isLike? "/dislike" : "/like");
   return fetch(postsHost + "/"+ id+ (isLike? "/dislike" : "/like"), {
     method: "POST",

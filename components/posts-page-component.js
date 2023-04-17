@@ -2,6 +2,25 @@ import { USER_POSTS_PAGE, CHANGE_LIKE_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 
+import { formatDistance } from "date-fns";
+import { ru } from 'date-fns/locale';
+
+function timePassed(startDate)  {
+ 
+  if (!startDate) {
+    return "Fault"
+  }
+ console.log(startDate);
+ console.log(typeof(startDate));
+
+  const timeInterval = formatDistance(
+    new Date(startDate),
+    new Date(),
+    {locale: ru},
+);
+  return timeInterval;
+  
+}
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
  
@@ -40,7 +59,7 @@ export function renderPostsPageComponent({ appEl }) {
                       ${post.description}
                     </p>
                     <p class="post-date">
-                      19 минут назад
+                      ${timePassed(post.createdAt)}
                     </p>
                   </li>`
     }) + `             
