@@ -1,35 +1,23 @@
 import { USER_POSTS_PAGE, CHANGE_LIKE_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { posts, goToPage,getToken } from "../index.js";
 
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { ru } from 'date-fns/locale';
 
-function timePassed(startDate)  {
- 
-  if (!startDate) {
-    return "Fault"
-  }
- console.log(startDate);
- console.log(typeof(startDate));
+function ucFirst(str) {
+  return str? str[0].toUpperCase() + str.slice(1): str;
+ }
 
-  const timeInterval = formatDistance(
-    new Date(startDate),
-    new Date(),
-    {locale: ru},
-);
-  return timeInterval;
-  
+function timePassed(startDate){ 
+ return startDate? formatDistanceToNow(
+  new Date(startDate),
+   { locale: ru })
+: "Неверная дата";
 }
-export function renderPostsPageComponent({ appEl }) {
-  // TODO: реализовать рендер постов из api
- 
 
-  /**
-   *  (post.likes.length >1) ? "и еще " +(post.likes.length-1):""}
-   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
+export function renderPostsPageComponent({ appEl }) {
+ 
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
@@ -59,7 +47,7 @@ export function renderPostsPageComponent({ appEl }) {
                       ${post.description}
                     </p>
                     <p class="post-date">
-                      ${timePassed(post.createdAt)}
+                      ${ucFirst(timePassed(post.createdAt)) + " тому назад"}
                     </p>
                   </li>`
     }) + `             
@@ -80,14 +68,16 @@ export function renderPostsPageComponent({ appEl }) {
     });
   }
 
-   for (let likeEl of document.querySelectorAll(".like-button")) {
-    let a =likeEl.dataset.postId;
+  for (let likeEl of document.querySelectorAll(".like-button")) {
+    let a = likeEl.dataset.postId;
     likeEl.addEventListener("click", () => {
-      console.log(likeEl.dataset.postId);
-      goToPage(CHANGE_LIKE_PAGE, {
+      if (!getToken()) {
+      alert("Лайкать посты могут только авторизованные пользователи!");
+      return;
+      }
+        goToPage(CHANGE_LIKE_PAGE, {
         postId: likeEl.dataset.postId,
-        postIsLiked: likeEl.dataset.postIsLiked,
       });
     });
-   }
+  }
 }

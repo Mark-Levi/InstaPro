@@ -1,15 +1,11 @@
 import { uploadPost } from "../api.js";
-import { getToken } from "../index.js";
-import { USER_POSTS_PAGE } from "../routes.js";
+import { getToken} from "../index.js";
+// import { POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
 let imageUrl = "";
 let description = "";
-
-function onImageUrlChange(imagUrl) {
-  console.log(imagUrl);
-}
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -50,13 +46,27 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     });
     // Обработка клика на кнопке "Добавить" 
     document.getElementById("add-button").addEventListener("click", () => {
-    
+      // Проверка заполнения полей
+      const normalizedDescription = document.getElementById("input_description").value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
+      if (normalizedDescription === "") {
+        alert("Введите описание фотографии");
+        return;
+      }
+      if (imageUrl === "") {
+        alert("Выберите фотографию");
+        return;
+      }
+
       uploadPost({
         token: getToken(),
-        description: document.getElementById("input_description").value,
+        description: normalizedDescription,
         imageUrl:imageUrl,
       });
+      onAddPostClick();
     });
   };
+  
+  // page = POSTS_PAGE;
   render();
 }

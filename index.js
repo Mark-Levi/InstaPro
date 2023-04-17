@@ -1,7 +1,7 @@
 // Comment
 
 
-import { getPosts,changeLike } from "./api.js";
+import { getPosts, changeLike } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -78,11 +78,11 @@ export const goToPage = (newPage, data) => {
     if (newPage === USER_POSTS_PAGE) {
       // TODO: реализовать получение постов юзера из API
       console.log("Открываю страницу пользователя: ", data.userId);
-      
+
       page = LOADING_PAGE;
       renderApp();
 
-      return getPosts({ token: getToken(),id: data.userId })
+      return getPosts({ token: getToken(), id: data.userId })
         .then((newPosts) => {
           page = USER_POSTS_PAGE;
           posts = newPosts;
@@ -93,17 +93,17 @@ export const goToPage = (newPage, data) => {
           goToPage(POSTS_PAGE);
         });
     }
-    
+
     if (newPage === CHANGE_LIKE_PAGE) {
       // Изменение лайка текущего поста
       // console.log("Открываю страницу пользователя: ", data.postId);
-      
+
       // page = LOADING_PAGE;
       // renderApp();
       //Получаем индекс текущего поста
       const currentPostIndex = posts.findIndex(post => post.id === data.postId);
 
-      return changeLike({ token: getToken(),id: data.postId,isLike: posts[currentPostIndex].isLiked })
+      return changeLike({ token: getToken(), id: data.postId, isLike: posts[currentPostIndex].isLiked })
         .then((newPosts) => {
           page = POSTS_PAGE;
           posts[currentPostIndex].likes = newPosts.likes;
@@ -151,9 +151,7 @@ const renderApp = () => {
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
-      onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
+      onAddPostClick() {
         goToPage(POSTS_PAGE);
       },
     });
@@ -174,8 +172,3 @@ const renderApp = () => {
 };
 
 goToPage(POSTS_PAGE);
-// goToPage(ADD_POSTS_PAGE);
-
-// function  onAddPostClick({ description, imageUrl }) {
-  
-// }
