@@ -1,19 +1,19 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 
-// const personalKey = "olya-jacobs";
-const personalKey = "prod";
+const personalKey = "olya-jacobs";
+// const personalKey = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
-const a = "https://webdev-hw-api.vercel.app/api/v1/prod/instapro";
+const a = "https://webdev-hw-api.vercel.app/api/v1/olya-jacobs/instapro";
 const b = "https://webdev-hw-api.vercel.app/api/user/login";
 const c = "https://webdev-hw-api.vercel.app/api/v1/prod/instapro/user-posts/643b981799ab77ea2d75bb29";
 
 export function changeLike({ token, id = "",isLike }) {
   //Ставим/снимаем лайк
-  
-  return fetch(postsHost + id+ isLike? "/dislike" : "/like", {
-    method: "GET",
+  const a=postsHost + "/" +id+ (isLike? "/dislike" : "/like");
+  return fetch(postsHost + "/"+ id+ (isLike? "/dislike" : "/like"), {
+    method: "POST",
     headers: {
       Authorization: token,
     },
@@ -26,7 +26,7 @@ export function changeLike({ token, id = "",isLike }) {
       return response.json();
     })
     .then((data) => {
-      return data.posts;
+      return data.post;
     });
 }
 

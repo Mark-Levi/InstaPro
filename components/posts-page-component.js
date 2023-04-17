@@ -1,10 +1,10 @@
-import { USER_POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE, CHANGE_LIKE_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
-  console.log("Актуальный список постов:", posts);
+ 
 
   /**
    *  (post.likes.length >1) ? "и еще " +(post.likes.length-1):""}
@@ -25,7 +25,7 @@ export function renderPostsPageComponent({ appEl }) {
                       <img class="post-image" src=${post.imageUrl}>
                     </div>
                     <div class="post-likes">
-                      <button data-post-id="${post.id}" class="like-button">
+                      <button data-post-id="${post.id}" data-post-isLiked="${post.isLiked}" class="like-button">
                         <img src="./assets/images/${(post.isLiked ? "like-active.svg" : "like-not-active.svg")}">
                       </button>
                       <p class="post-likes-text">
@@ -61,12 +61,14 @@ export function renderPostsPageComponent({ appEl }) {
     });
   }
 
-  for (let likeEl of document.querySelectorAll(".like-button")) {
-    userEl.addEventListener("click", () => {
+   for (let likeEl of document.querySelectorAll(".like-button")) {
+    let a =likeEl.dataset.postId;
+    likeEl.addEventListener("click", () => {
       console.log(likeEl.dataset.postId);
-      goToPage(USER_POSTS_PAGE, {
+      goToPage(CHANGE_LIKE_PAGE, {
         postId: likeEl.dataset.postId,
+        postIsLiked: likeEl.dataset.postIsLiked,
       });
     });
-  }
+   }
 }
